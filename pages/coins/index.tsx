@@ -89,7 +89,7 @@ const getMyProps = async () => {
           };
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
         return {
           ...coin,
           iconInfo: null,

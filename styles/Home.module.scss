@@ -128,7 +128,17 @@
   }
 }
 
+.bigGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  row-gap: 90px;
+}
+
 
 .hello {
   color: red;
+}
+
+.pokIcon {
+  width: 64px;
 }
