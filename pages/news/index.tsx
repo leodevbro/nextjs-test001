@@ -1,5 +1,9 @@
 import type { NextPage } from "next";
 
+// import { NextPage } from "next/types";
+
+// import { NextPage } from "next";
+
 export const News: NextPage = () => {
   return (
     <div>
