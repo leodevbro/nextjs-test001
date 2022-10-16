@@ -1,8 +1,19 @@
 import Axios from "axios";
-import type { NextPage } from "next";
+import type {
+  GetServerSideProps,
+  GetStaticPaths,
+  GetStaticProps,
+  NextPage,
+} from "next";
 import { useRouter } from "next/router";
-import { IPok, baseUrlOfPokAPI } from "pages";
+import { IPok, baseUrlOfPokAPI, getPoks } from "pages";
 import { useEffect, useState } from "react";
+
+// enum fEnum {
+//   pathSection = "id",
+// }
+
+const qProp = "id";
 
 interface IPokDetails {
   image: string;
@@ -22,13 +33,55 @@ const getOnePok = async (pokId: number) => {
   return thePok;
 };
 
-export const PokProfile: NextPage = () => {
+// export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  let pok: null | IPokDetails = null;
+  if (params && typeof params[qProp] === "string") {
+    pok = await getOnePok(Number(params[qProp]));
+  }
+
+  console.log("staaart iddd");
+  await new Promise((res, rej) => {
+    setTimeout(() => {
+      res(true);
+    }, 5000);
+  });
+  console.log("eeeend iddd");
+
+  return {
+    props: {
+      pok,
+    },
+  };
+};
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const myPoks = await getPoks();
+
+  const myPaths = myPoks.map((item) => {
+    return {
+      params: {
+        [qProp]: item.id.toString(),
+      },
+    };
+  });
+
+  console.log("myPaths:", myPaths);
+
+  return {
+    paths: [],
+    fallback: false,
+  };
+};
+
+export const PokProfile: NextPage<{ pok: IPokDetails | null }> = ({ pok }) => {
   const router = useRouter();
 
   const rQuery = router.query;
 
-  const { id } = rQuery as { id: string | undefined };
+  const { [qProp]: id } = rQuery as { [qProp]: string | undefined };
 
+  /*
   const [pok, setPok] = useState<IPokDetails | null>(null);
 
   useEffect(() => {
@@ -40,9 +93,10 @@ export const PokProfile: NextPage = () => {
       setPok(() => fetchedPok);
     });
   }, [id]);
+  */
 
   if (!pok) {
-    return <div>Loading...</div>;
+    return <div>{`Loading...777`}</div>;
   }
 
   return (
@@ -74,5 +128,14 @@ export const PokProfile: NextPage = () => {
     </div>
   );
 };
+
+// export const getStaticProps = () => {
+//   return {
+//     props: {
+//       coinData: [],
+//     },
+//     revalidate: 10,
+//   };
+// }
 
 export default PokProfile;

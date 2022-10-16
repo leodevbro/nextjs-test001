@@ -1,5 +1,5 @@
 import Axios from "axios";
-import type { NextPage } from "next";
+import type { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -14,15 +14,34 @@ export interface IPok {
   name: string;
 }
 
-const getPoks = async () => {
+export const getPoks = async () => {
   const fetched = await Axios.get(`${baseUrlOfPokAPI}index.json`);
 
   const pokArr = fetched.data as IPok[];
 
-  return pokArr;
+  return pokArr.slice(0, 20);
 };
 
-const Home: NextPage = () => {
+export const getStaticProps: GetStaticProps = async () => {
+  const pokemons = await getPoks();
+
+  console.log("staaart poks");
+  await new Promise((res, rej) => {
+    setTimeout(() => {
+      res(true);
+    }, 15000);
+  });
+  console.log("end poks");
+
+  return {
+    props: {
+      pokemons,
+    },
+  };
+};
+
+const Home: NextPage<{ pokemons: IPok[] }> = ({ pokemons }) => {
+  /*
   const [pokemons, setPokemons] = useState<IPok[]>([]);
 
   useEffect(() => {
@@ -30,6 +49,11 @@ const Home: NextPage = () => {
       setPokemons(() => fetchedArr);
     });
   }, []);
+  */
+
+  if (!pokemons) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className={sty.container}>
@@ -40,12 +64,15 @@ const Home: NextPage = () => {
       <h1 className={sty.hello}>Hello</h1>
 
       <div className={sty.bigGrid}>
-        {pokemons.map((pok, pokIndex) => {
+        {pokemons.slice(0, 30).map((pok, pokIndex) => {
           return (
             <div key={pok.id}>
               <div>{pokIndex + 1}</div>
               <Link href={`/pokemon/${pok.id}`}>
-                <a target="_blank" rel="noopener noreferrer">
+                <a
+                  // target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <picture>
                     <img
                       className={sty.pokIcon}
