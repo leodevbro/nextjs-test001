@@ -29,7 +29,7 @@ export const getStaticProps: GetStaticProps = async () => {
   await new Promise((res, rej) => {
     setTimeout(() => {
       res(true);
-    }, 15000);
+    }, 100);
   });
   console.log("end poks");
 
