@@ -1,4 +1,6 @@
+import Router, { useRouter } from "next/router";
 import { NextPage } from "next/types";
+import { MouseEventHandler, useCallback } from "react";
 import Card from "../ui/Card";
 import classes from "./MeetupItem.module.scss";
 
@@ -8,6 +10,13 @@ const MeetupItem: NextPage<{
   title: string;
   address: string;
 }> = (props) => {
+  const router = useRouter();
+
+  const showDetailsFn: MouseEventHandler<HTMLButtonElement> =
+    useCallback(() => {
+      router.push(`/meetups/${props.id}`);
+    }, [props.id, router]);
+
   return (
     <li className={classes.item}>
       <Card>
@@ -21,7 +30,7 @@ const MeetupItem: NextPage<{
           <address>{props.address}</address>
         </div>
         <div className={classes.actions}>
-          <button>Show Details</button>
+          <button onClick={showDetailsFn}>Show Details</button>
         </div>
       </Card>
     </li>

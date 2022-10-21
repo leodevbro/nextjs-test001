@@ -1,12 +1,13 @@
 import { NextPage } from "next/types";
+import { tyAddMeetupFn } from "pages/meetups/new-meetup";
 import { FormEventHandler, ReactNode, useRef } from "react";
 
 import Card from "../ui/Card";
+import { IOneMeetup } from "./MeetupList";
 import classes from "./NewMeetupForm.module.scss";
 
 const NewMeetupForm: NextPage<{
-  children: ReactNode;
-  onAddMeetup: Function;
+  onAddMeetup: tyAddMeetupFn;
 }> = (props) => {
   const titleInputRef = useRef<HTMLInputElement | null>(null);
   const imageInputRef = useRef<HTMLInputElement | null>(null);
@@ -30,7 +31,7 @@ const NewMeetupForm: NextPage<{
     const enteredAddress = addressInputRef.current.value;
     const enteredDescription = descriptionInputRef.current.value;
 
-    const meetupData = {
+    const meetupData: Omit<IOneMeetup, "id"> = {
       title: enteredTitle,
       image: enteredImage,
       address: enteredAddress,

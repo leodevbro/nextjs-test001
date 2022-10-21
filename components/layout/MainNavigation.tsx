@@ -9,12 +9,12 @@ const MainNavigation: NextPage<{}> = () => {
       <nav>
         <ul>
           <li>
-            <Link href="/">
+            <Link href="/meetups">
               <a>All Meetups</a>
             </Link>
           </li>
           <li>
-            <Link href="/new-meetup">
+            <Link href="/meetups/new-meetup">
               <a>Add New Meetup</a>
             </Link>
           </li>
